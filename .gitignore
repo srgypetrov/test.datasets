@@ -1,1 +1,7 @@
+*.mo
+*.pem
+*.pyc
+
+__pycache__
+
 .python-version
