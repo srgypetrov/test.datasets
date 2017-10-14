@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}{{ block.super }} - Наборы данных{% endblock title %}
+
+{% block content %}
+	<div class="jumbotron">
+		<div class="container text-center">
+			<div class="page-header">
+				{% if test_process %}
+					<h2>Последняя проверка функции: {{ test_process.finished|date:"j E Y H:i" }}</h2>
+					<p class="text-success">Тестирование прошло успешно</p>
+				{% else %}
+					<h2>Проверка функции не проводилась</h2>
+				{% endif %}
+			</div>
+			<p>
+				<a class="btn btn-primary btn-lg" href="#" role="button">Запустить проверку функции</a>
+				<a class="btn btn-primary btn-lg" href="#" role="button" data-toggle="modal" data-target="#addDataset" type="button">Добавить набор данных</a>
+			</p>
+			{% comment %}{% if form.errors %}{% endcomment %}
+				{% comment %}<div class="col-xs-2 col-lg-8 ">{% endcomment %}
+					{% for error in form.data.errors %}
+						<div class="alert alert-danger alert-dismissible fade in" role="alert">
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> {{ error }}
+						</div>
+					{% endfor %}
+				{% comment %}</div>{% endcomment %}
+			{% comment %}{% endif %}{% endcomment %}
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			{% for obj in object_list %}
+				<div class="col-xs-6 col-lg-4">
+					<h3>{{ obj.created|date:"j E Y H:i:s" }}</h3>
+					<p class="text-success">Тестирование прошло успешно</p>
+					<p><samp>{{ obj.data|truncatechars:200 }}</samp></p>
+					<p><a class="btn btn-default" href="#" role="button">Подробнее &raquo;</a></p>
+				</div>
+			{% empty %}
+				Наборы данных отсутствуют
+			{% endfor %}
+		</div>
+		{% if is_paginated %}
+			<div class="row">
+				<div class="col-xs-6 col-lg-4">
+					<nav aria-label="Page navigation">
+						<ul class="pagination">
+							<li {% if not page_obj.has_previous %}class="disabled"{% endif %}>
+								<a href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}#{% endif %}" aria-label="Previous">
+									<span aria-hidden="true">&laquo;</span>
+								</a>
+							</li>
+							<li {% if not page_obj.has_next %}class="disabled"{% endif %}>
+								<a href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}#{% endif %}" aria-label="Next">
+									<span aria-hidden="true">&raquo;</span>
+								</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		{% endif %}
+	</div>
+
+	<div class="modal fade" id="addDataset" tabindex="-1" role="dialog" aria-labelledby="addDatasetLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="addDatasetLabel">Добавить набор данных</h4>
+				</div>
+				<form action="." method="POST">
+					{% csrf_token %}
+					<div class="modal-body">
+						<div class="form-group">
+							{{ form.data }}
+							{% comment %}<textarea class="form-control" rows="3"></textarea>{% endcomment %}
+						</div>
+						<button type="submit" class="btn btn-primary">Добавить</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock content %}
