@@ -1,14 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}{{ block.super }} - Наборы данных{% endblock title %}
+{% block title %}{{ block.super }} - Тестирование{% endblock title %}
 
 {% block content %}
 	<div class="jumbotron">
 		<div class="container text-center">
 			<div class="page-header">
 				{% if test_process %}
-					<h2>Последняя проверка функции: {{ test_process.finished|date:"j E Y H:i" }}</h2>
-					<p class="text-success">Тестирование прошло успешно</p>
+					<h2>Последняя проверка функции: <em>{{ test_process.finished|date:"j E Y в H:i" }}</em></h2>
+					{% if test_process.failed %}
+						<p class="text-danger">Тестирование завершено с ошибками</p>
+					{% else %}
+						<p class="text-success">Тестирование прошло успешно</p>
+					{% endif %}
 				{% else %}
 					<h2>Проверка функции не проводилась</h2>
 				{% endif %}
@@ -17,15 +21,11 @@
 				<a class="btn btn-primary btn-lg" href="#" role="button">Запустить проверку функции</a>
 				<a class="btn btn-primary btn-lg" href="#" role="button" data-toggle="modal" data-target="#addDataset" type="button">Добавить набор данных</a>
 			</p>
-			{% comment %}{% if form.errors %}{% endcomment %}
-				{% comment %}<div class="col-xs-2 col-lg-8 ">{% endcomment %}
-					{% for error in form.data.errors %}
-						<div class="alert alert-danger alert-dismissible fade in" role="alert">
-							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> {{ error }}
-						</div>
-					{% endfor %}
-				{% comment %}</div>{% endcomment %}
-			{% comment %}{% endif %}{% endcomment %}
+				{% for error in form.data.errors %}
+					<div class="alert alert-danger alert-dismissible fade in" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> {{ error }}
+					</div>
+				{% endfor %}
 		</div>
 	</div>
 
@@ -33,10 +33,18 @@
 		<div class="row">
 			{% for obj in object_list %}
 				<div class="col-xs-6 col-lg-4">
-					<h3>{{ obj.created|date:"j E Y H:i:s" }}</h3>
-					<p class="text-success">Тестирование прошло успешно</p>
-					<p><samp>{{ obj.data|truncatechars:200 }}</samp></p>
-					<p><a class="btn btn-default" href="#" role="button">Подробнее &raquo;</a></p>
+					<h3>Набор данных #{{ obj.pk }}</h3>
+					<p>Добавлен: <em>{{ obj.created|date:"j E Y H:i:s" }}</em></p>
+					{% if obj.processed %}
+						{% if not obj.failed_results %}
+							<p class="text-success">Тестирование прошло успешно</p>
+						{% else %}
+							<p class="text-danger">Количество ошибок: {{ obj.failed_results }}</p>
+						{% endif %}
+					{% else %}
+						<p class="text-info">Тестирование не проводилось</p>
+					{% endif %}
+					<p><a class="btn btn-default" href="{{ obj.get_absolute_url }}" role="button">Подробнее &raquo;</a></p>
 				</div>
 			{% empty %}
 				Наборы данных отсутствуют
@@ -76,7 +84,6 @@
 					<div class="modal-body">
 						<div class="form-group">
 							{{ form.data }}
-							{% comment %}<textarea class="form-control" rows="3"></textarea>{% endcomment %}
 						</div>
 						<button type="submit" class="btn btn-primary">Добавить</button>
 					</div>

@@ -1,5 +1,6 @@
 from django.db.models import Case, IntegerField, Sum, When
-from django.views.generic import ListView
+from django.shortcuts import redirect
+from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormMixin
 
 from .forms import DatasetModelForm
@@ -15,6 +16,7 @@ class DatasetView(ListView, FormMixin):
         form = self.get_form()
         if form.is_valid():
             form.save()
+            return redirect('datasets')
         return self.get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -38,3 +40,9 @@ class DatasetView(ListView, FormMixin):
                 )
             )
         )
+
+
+class DatasetDetailView(DetailView):
+
+    model = Dataset
+

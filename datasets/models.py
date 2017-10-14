@@ -1,5 +1,6 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -16,6 +17,9 @@ class Dataset(models.Model):
 
     def __str__(self):
         return str(self.created)
+
+    def get_absolute_url(self):
+        return reverse('dataset_detail', args=[self.pk])
 
 
 class TestResult(models.Model):

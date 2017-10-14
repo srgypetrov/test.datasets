@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ block.super }} - Набор данных #{{ object.pk }}{% endblock title %}
+
+{% block content %}
+	<div class="container">
+		<div class="page-header">
+			<ol class="breadcrumb">
+				<li><a href="{% url 'datasets' %}">Главная</a></li>
+				<li class="active">Набор данных #{{ object.pk }}</li>
+			</ol>
+			<h1>{{ object.created|date:"j E Y H:i:s" }} {% if object.processed %}<small>/ Обработан: {{ object.processed|date:"j E Y в H:i" }}</small>{% endif %}</h1>
+		</div>
+		{% for result in object.test_results.all %}
+			<div class="row">
+				<div class="col-xs-9 col-lg-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<h3 class="panel-title">Данные</h3>
+						</div>
+						<div class="panel-body">
+							<pre>{{ result.data|pprint }}</pre>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-9 col-lg-6">
+					<div class="panel {% if result.status == 'failed' %}panel-danger{% else %}panel-success{% endif %}">
+						<div class="panel-heading">
+							<h3 class="panel-title">{% if result.status == 'failed' %}Ошибка{% else %}Успех{% endif %}</h3>
+						</div>
+						<div class="panel-body">
+							<pre>{{ result.result|pprint }}</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		<div class="row">
+			<div class="col-xs-12 col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Набор данных</h3>
+					</div>
+					<div class="panel-body">
+						<pre>{{ object.data|pprint }}</pre>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock content %}
