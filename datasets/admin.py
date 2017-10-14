@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Dataset, TestProcess, TestResult
+
+
+admin.site.register(Dataset)
+admin.site.register(TestProcess)
+admin.site.register(TestResult)
