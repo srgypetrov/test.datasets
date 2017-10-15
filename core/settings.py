@@ -121,3 +121,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'
+
+CELERY_RESULT_BACKEND = 'rpc://'
+
+CELERY_RESULT_EXPIRES = 1200
