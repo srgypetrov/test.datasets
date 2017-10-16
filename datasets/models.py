@@ -3,20 +3,43 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
+from .querysets import DatasetQuerySet, TestProcessQuerySet
+from .validators import array_only
 
-class Dataset(models.Model):
+
+class BaseTestModel(models.Model):
 
     created = models.DateTimeField(_('Created'), auto_now_add=True)
-    processed = models.DateTimeField(_('Processed'), blank=True, null=True)
-    data = JSONField(_('Data'))
+    tests_count = models.IntegerField(_('Tests count'), blank=True, null=True)
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return str(self.created)
+
+    @property
+    def failed(self):
+        return self.test_results.filter(status='failed').exists()
+
+    @property
+    def processed(self):
+        return self.test_results.count() == self.tests_count
+
+    @property
+    def processed_at(self):
+        return self.test_results.first().created
+
+
+class Dataset(BaseTestModel):
+
+    data = JSONField(_('Data'), validators=[array_only])
+    objects = DatasetQuerySet.as_manager()
 
     class Meta:
         verbose_name = _("Dataset")
         verbose_name_plural = _("Datasets")
         ordering = ['-created']
-
-    def __str__(self):
-        return str(self.created)
 
     def get_absolute_url(self):
         return reverse('dataset_detail', args=[self.pk])
@@ -29,6 +52,7 @@ class TestResult(models.Model):
         ('success', _('Success'))
     )
 
+    created = models.DateTimeField(_('Created'), auto_now_add=True)
     status = models.CharField(_('Status'), max_length=50, choices=STATUSES)
     dataset = models.ForeignKey('datasets.Dataset', verbose_name=_('Dataset'))
     test_process = models.ForeignKey('datasets.TestProcess', verbose_name=_('Test process'))
@@ -39,6 +63,7 @@ class TestResult(models.Model):
         verbose_name = _("Test result")
         verbose_name_plural = _("Test results")
         default_related_name = 'test_results'
+        ordering = ['-created']
 
     def __str__(self):
         return 'Dataset: {0}, TestProcess {1}, Status: {2}'.format(
@@ -46,19 +71,11 @@ class TestResult(models.Model):
         )
 
 
-class TestProcess(models.Model):
+class TestProcess(BaseTestModel):
 
-    started = models.DateTimeField(_('Started'), auto_now_add=True)
-    finished = models.DateTimeField(_('Finished'), blank=True, null=True)
+    objects = TestProcessQuerySet.as_manager()
 
     class Meta:
         verbose_name = _("Test process")
         verbose_name_plural = _("Test processes")
-        get_latest_by = "finished"
-
-    def __str__(self):
-        return str(self.started)
-
-    @property
-    def failed(self):
-        return self.test_results.filter(status='failed').exists()
+        ordering = ['-created']

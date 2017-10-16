@@ -7,12 +7,13 @@
 		<div class="container text-center">
 			<div class="page-header">
 				{% if test_process %}
-					<h2>Последняя проверка функции: <em>{{ test_process.finished|date:"j E Y в H:i" }}</em></h2>
+					<h2>Последняя проверка функции: <em>{{ test_process.processed_at|date:"j E Y в H:i" }}</em></h2>
 					{% if test_process.failed %}
 						<p class="text-danger">Тестирование завершено с ошибками</p>
 					{% else %}
 						<p class="text-success">Тестирование прошло успешно</p>
 					{% endif %}
+					<p>Обработанные наборы данных: {{ test_process_datasets|join:", " }}</p>
 				{% else %}
 					<h2>Проверка функции не проводилась</h2>
 				{% endif %}

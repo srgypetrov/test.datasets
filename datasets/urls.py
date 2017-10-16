@@ -1,7 +1,6 @@
 from django.conf.urls import url
 
-from .views import DatasetView, DatasetDetailView
-
+from .views import DatasetDetailView, DatasetView
 
 urlpatterns = [
     url(r'^$', DatasetView.as_view(), name='datasets'),

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-14 19:30+0300\n"
+"POT-Creation-Date: 2017-10-16 08:24+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: apps.py:8 models.py:14
+#: apps.py:8 models.py:35
 msgid "Datasets"
 msgstr "Наборы данных"
 
@@ -28,58 +28,58 @@ msgstr "Наборы данных"
 msgid "Dataset can not be empty."
 msgstr "Набор данных не может быть пустым."
 
-#: models.py:8
+#: models.py:12
+msgid "Tests count"
+msgstr "Количество тестов"
+
+#: models.py:30
 msgid "Created"
 msgstr "Создан"
 
-#: models.py:9
-msgid "Processed"
-msgstr "Обработан"
-
-#: models.py:10 models.py:31
+#: models.py:31 models.py:55
 msgid "Data"
 msgstr "Данные"
 
-#: models.py:13 models.py:29
+#: models.py:34 models.py:53
 msgid "Dataset"
 msgstr "Набор данных"
 
-#: models.py:24
+#: models.py:48
 msgid "Failed"
 msgstr "Ошибка"
 
-#: models.py:25
+#: models.py:49
 msgid "Success"
 msgstr "Успех"
 
-#: models.py:28
+#: models.py:52
 msgid "Status"
 msgstr "Статус"
 
-#: models.py:30 models.py:51
+#: models.py:54 models.py:74
 msgid "Test process"
 msgstr "Процесс тестирования"
 
-#: models.py:32
+#: models.py:56
 msgid "Result"
 msgstr "Результат"
 
-#: models.py:35
+#: models.py:59
 msgid "Test result"
 msgstr "Результат тестирования"
 
-#: models.py:36
+#: models.py:60
 msgid "Test results"
 msgstr "Результаты тестирования"
 
-#: models.py:47
+#: models.py:71
 msgid "Started"
 msgstr "Начат"
 
-#: models.py:48
-msgid "Finished"
-msgstr "Заверешен"
-
-#: models.py:52
+#: models.py:75
 msgid "Test processes"
 msgstr "Тестовые процессы"
+
+#: validators.py:7
+msgid "Dataset must be JSON array."
+msgstr "Набор данных должен быть массивом JSON."
