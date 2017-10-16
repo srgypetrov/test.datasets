@@ -19,7 +19,7 @@
 				{% endif %}
 			</div>
 			<p>
-				<a class="btn btn-primary btn-lg" href="#" role="button">Запустить проверку функции</a>
+				<a class="btn btn-primary btn-lg" id="testProcessInit" data-loading-text="Проверка функции..." autocomplete="off">Запустить проверку функции</a>
 				<a class="btn btn-primary btn-lg" href="#" role="button" data-toggle="modal" data-target="#addDataset" type="button">Добавить набор данных</a>
 			</p>
 				{% for error in form.data.errors %}
@@ -35,7 +35,7 @@
 			{% for obj in object_list %}
 				<div class="col-xs-6 col-lg-4">
 					<h3>Набор данных #{{ obj.pk }}</h3>
-					<p>Добавлен: <em>{{ obj.created|date:"j E Y H:i:s" }}</em></p>
+					<p>Добавлен: <em>{{ obj.created|date:"j E Y в H:i:s" }}</em></p>
 					{% if obj.processed %}
 						{% if not obj.failed_results %}
 							<p class="text-success">Тестирование прошло успешно</p>
@@ -93,3 +93,28 @@
 		</div>
 	</div>
 {% endblock content %}
+
+{% block extra_js %}
+	<script>
+		function check_status(url) {
+			$.get(url, function(data) {
+				if (data.finished) {
+					location.reload();
+				} else {
+					setTimeout(function(){check_status(url);}, 3000);
+				}
+			});
+		}
+		$('#testProcessInit').on('click', function () {
+			var $btn = $(this).button('loading')
+			$.get("{% url 'test_process_init' %}", function(data) {
+				if (data.status_url) {
+					check_status(data.status_url)
+				} else {
+					$btn.button('reset')
+				}
+			});
+		})
+	</script>
+{% endblock extra_js %}
+
