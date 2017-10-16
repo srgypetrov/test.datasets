@@ -34,10 +34,10 @@ class DatasetView(ListView, FormMixin):
     def get_test_process_data(self):
         qs = TestProcess.objects.processed()
         qs = qs.annotate(datasets=ArrayAgg('test_results__dataset_id'))
-        test_process = qs.last()
+        test_process = qs.first()
         return {
             'test_process': test_process,
-            'test_process_datasets': set(test_process.datasets)
+            'test_process_datasets': set(getattr(test_process, 'datasets', []))
         }
 
     def get_queryset(self):
@@ -63,6 +63,8 @@ def test_process_init(request):
     for worker, tasks in active_tasks.items():
         if tasks:
             return JsonResponse({'error': 'Test process is already running.'})
+    if not Dataset.objects.not_processed().exists():
+        return JsonResponse({'error': 'No data sets not processed.'})
     task = test_datasets_task.apply_async(queue='first')
     url = '{0}?task_id={1}'.format(reverse('test_process_status'), task.id)
     return JsonResponse({'status_url': url})
