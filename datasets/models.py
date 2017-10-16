@@ -28,7 +28,8 @@ class BaseTestModel(models.Model):
 
     @property
     def processed_at(self):
-        return self.test_results.first().created
+        test_result = self.test_results.first()
+        return getattr(test_result, 'created', None)
 
 
 class Dataset(BaseTestModel):
