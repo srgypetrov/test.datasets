@@ -9,7 +9,8 @@ from .process import test_func, save_result
 class TestFuncTask(Task):
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        save_result_task.s(args, {'error': str(einfo.exception)}).apply_async(queue='third')
+        error = '{0}: {1}'.format(einfo.type.__name__, einfo.exception)
+        save_result_task.s(args, {'error': error}).apply_async(queue='third')
 
     def on_success(self, retval, task_id, args, kwargs):
         save_result_task.s(args, retval).apply_async(queue='third')
