@@ -4,6 +4,18 @@
 git clone srgypetrov@bitbucket.org:srgypetrov/alytics.git
 ```
 
+Установить зависимости:
+
+```
+pip install -r requirements.txt
+```
+
+Применить миграции БД:
+
+```
+python manage.py migrate
+```
+
 Запуск django:
 
 ```
