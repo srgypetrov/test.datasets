@@ -24,8 +24,6 @@ def test_datasets_task():
         for item in dataset.data:
             json_data = json.dumps(item)
             dataset_tasks.append(test_func_task.s(json_data, dataset.pk))
-        dataset.tests_count = len(dataset_tasks)
-        dataset.save()
         test_tasks.extend(dataset_tasks)
     TestProcess.objects.create(tests_count=len(test_tasks))
     group(*test_tasks).apply_async(queue='second')

@@ -10,7 +10,8 @@ from .validators import array_only
 class BaseTestModel(models.Model):
 
     created = models.DateTimeField(_('Created'), auto_now_add=True)
-    tests_count = models.IntegerField(_('Tests count'), blank=True, null=True)
+    tests_count = models.IntegerField(_('Tests count'), blank=True, null=True,
+                                      editable=False)
 
     class Meta:
         abstract = True
@@ -44,6 +45,10 @@ class Dataset(BaseTestModel):
 
     def get_absolute_url(self):
         return reverse('dataset_detail', args=[self.pk])
+
+    def save(self, *args, **kwargs):
+        self.tests_count = len(self.data)
+        super().save(*args, **kwargs)
 
 
 class TestResult(models.Model):
