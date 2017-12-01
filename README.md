@@ -1,14 +1,14 @@
 # Настройки
 
-### PostgreSQL
- * `name`: `datasets`
- * `user`: `datasets`
- * `password`: `datasets`
+##### PostgreSQL
+ * name: datasets
+ * user: datasets
+ * password: datasets
 
-### RabbitMQ
- * `user`: `guest`
- * `password`: `guest`
- * `port`: `5672`
+##### RabbitMQ
+ * user: guest
+ * password: guest
+ * port: 5672
 
 # Разворачивание
 
@@ -98,6 +98,6 @@ honcho start
 def test_func(json):
      import json
      d = json.loads(json)
-     return {‘result’: d[‘a’] + d[‘b’]}
+     return {‘result’: d['a'] + d['b']}
 ```
-Приложение разрабатывать в git репозитории
+Приложение разрабатывать в git репозитории.
