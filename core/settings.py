@@ -79,9 +79,9 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'alytics',
-        'USER': 'alytics',
-        'PASSWORD': 'alytics'
+        'NAME': 'datasets',
+        'USER': 'datasets',
+        'PASSWORD': 'datasets'
     }
 }
 
